@@ -1,4 +1,3 @@
-
 iOS开发技术交流qq群:528243317
 
 ps:求一份上海iOS工作，够吃住就行，谢谢  TEL:18638055213
@@ -23,9 +22,7 @@ ps:求一份上海iOS工作，够吃住就行，谢谢  TEL:18638055213
 
 
 
-![image](https://github.com/XLAccount/MiaoBo/blob/master/程序展示3.gif)
+![image text](https://github.com/XLAccount/MiaoBo/blob/master/程序展示3.gif)
 
 
 展示图片
-
-感谢大神 Monkey_ALin(http://www.jianshu.com/users/9723687edfb5/latest_articles) 的demo支持
