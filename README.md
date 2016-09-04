@@ -27,4 +27,5 @@ ps:求一份上海iOS工作，够吃住就行，谢谢  TEL:18638055213
 
 
 展示图片
-感谢大神 Monkey_ALin(http://www.jianshu.com/users/9723687edfb5/latest_articles)的demo支持
+
+感谢大神 Monkey_ALin(http://www.jianshu.com/users/9723687edfb5/latest_articles) 的demo支持
