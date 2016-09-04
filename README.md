@@ -5,6 +5,6 @@ iOS开发技术交流qq群:528243317
 
 快速集成RTMP的视频推流教程http://www.code4app.com/blog-843201-315.html
 
-![image](https://github.com/XLAccount/MiaoBo/blob/master/程序展示1.gif)
-![image](https://github.com/XLAccount/MiaoBo/blob/master/程序展示2.gif)
-![image](https://github.com/XLAccount/MiaoBo/blob/master/程序展示3.gif)
+![image](https://github.com/XLAccount/MiaoBo/blob/master/程序展示1.gif)\n
+![image](https://github.com/XLAccount/MiaoBo/blob/master/程序展示2.gif)\n
+![image](https://github.com/XLAccount/MiaoBo/blob/master/程序展示3.gif)\n
