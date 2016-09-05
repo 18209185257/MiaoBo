@@ -24,6 +24,7 @@ ps:求一份上海工作(不是iOS也可以)，够吃住就行，谢谢  TEL:186
 
 
 ![image text](https://github.com/XLAccount/MiaoBo/blob/master/程序展示3.gif)
+![image text](http://img3.imgtn.bdimg.com/it/u=2016238650,77262465&fm=21&gp=0.jpg)
 
 
 展示图片
