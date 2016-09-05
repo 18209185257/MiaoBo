@@ -116,6 +116,7 @@
         imageView.userInteractionEnabled = YES;
         [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickOther)]];
         [self.moviePlayer.view addSubview:imageView];
+        
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.catEarView);
             make.bottom.equalTo(self.catEarView.mas_top).offset(-40);
@@ -130,12 +131,15 @@
     if (!_anchorView) {
         XLAnchorInfoView *anchorView = [XLAnchorInfoView anchorInfoView];
         
+        
         [anchorView setSelectBlock:^(XLHotModel *hotModel) {
             
-            XLUserInfoView *userInfoView = [XLUserInfoView userInfoView];
-            self.userinfoView = userInfoView;
+           __weak typeof(self) weakSelf = self;
             
-            [userInfoView userWithHotModel:hotModel ofView:self.parentVC.view];
+            XLUserInfoView *userInfoView = [XLUserInfoView userInfoView];
+            weakSelf.userinfoView = userInfoView;
+            
+            [userInfoView userWithHotModel:hotModel ofView:weakSelf.parentVC.view];
             
             userInfoView.selectedBlock = ^(){
             
@@ -168,8 +172,9 @@
         
         [catEarView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickCatEar)]];
         [catEarView mas_makeConstraints:^(MASConstraintMaker *make) {
+            __weak typeof(self) weakSelf = self;
             make.right.equalTo(@-30);
-            make.centerY.equalTo(self);
+            make.centerY.equalTo(weakSelf);
             make.width.height.equalTo(@98);
         }];
         _catEarView = catEarView;
@@ -229,6 +234,8 @@
 
 - (XLLiveEndView *)endView
 {
+    __weak typeof(self) weakSelf = self;
+    
     if (!_endView) {
         XLLiveEndView *endView = [XLLiveEndView liveEndView];
         endView.hotModel = self.hotModel;
@@ -238,10 +245,11 @@
             make.edges.equalTo(@0);
         }];
         [endView setQuitBlock:^{
-            [self quit];
+            
+            [weakSelf quit];
         }];
         [endView setLookOtherBlock:^{
-            [self clickCatEar];
+            [weakSelf clickCatEar];
         }];
         _endView = endView;
     }
@@ -303,10 +311,11 @@
     
     [[SDWebImageDownloader sharedDownloader] downloadImageWithURL:[NSURL URLWithString:placeHolderUrl] options:SDWebImageDownloaderUseNSURLCache progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            __weak typeof(self) weakSelf = self;
             
             if(image){
-            [self.parentVC showGifLoding:nil inView:self.placeHolderView];
-            self.placeHolderView.image = [UIImage blurImage:image blur:0.8];
+            [weakSelf.parentVC showGifLoding:nil inView:weakSelf.placeHolderView];
+            weakSelf.placeHolderView.image = [UIImage blurImage:image blur:0.8];
             }
         });
     }];
@@ -374,13 +383,15 @@
             [_renderer start];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                __weak typeof(self) weakSelf = self;
+                
                 if (_placeHolderView) {
                     [_placeHolderView removeFromSuperview];
                     _placeHolderView = nil;
-                    [self.moviePlayer.view addSubview:_renderer.view];
+                    [weakSelf.moviePlayer.view addSubview:_renderer.view];
                     
                     //显示猫耳朵
-                    self.catEarView.hidden = NO;
+                    weakSelf.catEarView.hidden = NO;
                 }
             });
         }
@@ -392,6 +403,7 @@
 // 如果是网络状态不好, 断开后恢复, 也需要去掉加载
     if (self.parentVC.gifView.isAnimating) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
         [self.parentVC hideGufLoding];
     });
     }
@@ -408,7 +420,8 @@
     //    方法：
     //      1、重新获取直播地址，服务端控制是否有地址返回。
     //      2、用户http请求该地址，若请求成功表示直播未结束，否则结束
-    __weak typeof(self)weakSelf = self;    [XLLiveTool GetWithURL:self.hotModel.flv success:^(id result) {
+    __weak typeof(self)weakSelf = self;
+    [XLLiveTool GetWithURL:self.hotModel.flv success:^(id result) {
         
     } failure:^(NSError *error) {
         
@@ -425,6 +438,7 @@
 
 - (void)quit
 {
+    
     if (_bottomToolView){
         
         [_bottomToolView removeFromSuperview];
