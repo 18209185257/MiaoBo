@@ -66,27 +66,28 @@
     
         XLThirdLoginView *thirdView = [[XLThirdLoginView alloc] init];
         
+         __weak typeof(self) weakSelf = self;
         [thirdView setSelectedBlock:^(XLType type) {
            
-            self.coverView.hidden = YES;
+            weakSelf.coverView.hidden = YES;
             
             [self.coverView removeFromSuperview];
-            self.coverView = nil;
+            weakSelf.coverView = nil;
             
             switch (type) {
                 case sina:
                     
-                    [self sina];
+                    [weakSelf sina];
                     break;
                 
                 case qq:
                     
-                    [self qq];
+                    [weakSelf qq];
                     break;
                     
                 case weixin:
                     
-                    [self weixin];
+                    [weakSelf weixin];
                     break;
                 default:
                     break;
@@ -155,14 +156,15 @@
 
 - (void)stateDidChange
 {
+     __weak typeof(self) weakSelf = self;
     if ((self.player.loadState & IJKMPMovieLoadStatePlaythroughOK) != 0) {
         if (!self.player.isPlaying) {
             
             [self.view insertSubview:self.coverView atIndex:0];
             [self.player play];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.thirdView.hidden = NO;
-                self.loginBtn.hidden = NO;
+                weakSelf.thirdView.hidden = NO;
+                weakSelf.loginBtn.hidden = NO;
             });
         }
     }
@@ -210,6 +212,7 @@
 /** 新浪 */
 - (void)sina
 {
+     __weak typeof(self) weakSelf = self;
     UMSocialSnsPlatform *snsPlatform = [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina];
     
     snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response){
@@ -224,7 +227,7 @@
                 
                 [MBProgressHUD showSuccess:@"登陆成功"];
                
-                [self jump];
+                [weakSelf jump];
             }];
         }});
 
@@ -233,6 +236,7 @@
 /** 微信 */
 - (void)weixin
 {
+     __weak typeof(self) weakSelf = self;
     UMSocialSnsPlatform *snsPlatform = [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToWechatSession];
     
     snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response){
@@ -246,7 +250,7 @@
                 
                 [MBProgressHUD showSuccess:@"登陆成功"];
                 
-                [self jump];
+                [weakSelf jump];
             }];
         }});
 
@@ -256,6 +260,8 @@
 - (void)qq
 {
     UMSocialSnsPlatform * snsPlatform= [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToQQ];
+    
+     __weak typeof(self) weakSelf = self;
     snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response){
         
         //   获取微博用户名、uid、token
@@ -267,7 +273,7 @@
                 
                 [MBProgressHUD showSuccess:@"登陆成功"];
                 
-                [self jump];
+                [weakSelf jump];
                 
                 }];
         }});
@@ -279,6 +285,7 @@
 {
     XLTabBarViewController *tab = [[XLTabBarViewController alloc] init];
     
+     __weak typeof(self) weakSelf = self;
     //一秒之后跳转
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -287,17 +294,17 @@
         
         [self presentViewController:tab animated:NO completion:^{
             
-            [self.player stop];
+            [weakSelf.player stop];
             
-            [self.player shutdown];
+            [weakSelf.player shutdown];
             
             [[NSNotificationCenter defaultCenter] removeObserver:self];
             
-            [self.player.view removeFromSuperview];
+            [weakSelf.player.view removeFromSuperview];
                 self.player = nil;
             
-            [self.thirdView removeFromSuperview];
-            self.thirdView = nil;
+            [weakSelf.thirdView removeFromSuperview];
+            weakSelf.thirdView = nil;
         }];
     });
     
