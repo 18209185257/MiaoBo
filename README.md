@@ -23,8 +23,8 @@ ps:求一份上海工作(不是iOS也可以)，够吃住就行，谢谢  TEL:186
 
 
 
-![image text](https://github.com/XLAccount/MiaoBo/blob/master/程序展示3.gif)
-![image text](http://img3.imgtn.bdimg.com/it/u=2016238650,77262465&fm=21&gp=0.jpg)
+<!--![image text](https://github.com/XLAccount/MiaoBo/blob/master/程序展示3.gif)-->
+![image text](http://read.html5.qq.com/image?src=forum&q=5&r=0&imgflag=7&imageUrl=http://mmbiz.qpic.cn/mmbiz/foPACGrddJ2vaaSVOurz3ehayZLNrFfC5XyH4shicN3nUB7Ev4sMAhBsqlrJVSrMxVksGb1SMQKKP5z3kHnWKwg/0?wx_fmt=gif)
 
 
 展示图片
