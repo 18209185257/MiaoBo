@@ -49,13 +49,12 @@
 {
     _hotModel = hotModel;
     
-    NSLog(@"%@,%@",hotModel.smallpic,hotModel.bigpic);
-    
+    __weak typeof(self) weakSelf = self;
     [self.headImageView sd_setImageWithURL:[NSURL URLWithString:hotModel.smallpic] placeholderImage:[UIImage imageNamed:@"placeholder_head"] options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
     
         image = [UIImage  circleImage:image borderColor:[UIColor redColor] borderWidth:1];
         
-        self.headImageView.image = image;
+        weakSelf.headImageView.image = image;
     }];
     
     [self.headImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerImage:)]];
@@ -101,15 +100,16 @@
     XLUserInfoView *userInfoView = [XLUserInfoView userInfoView];
     
     [userInfoView userWithHotModel:_hotModel ofView:self.parentVC.view];
+    __weak typeof(self) weakSelf = self;
     
     [userInfoView setSelectedBlock:^{
        
         
         XLWatchLiveViewController *watch = [[XLWatchLiveViewController alloc] init];
         watch.hotModel = _hotModel;
-        watch.allModels = self.allModels;
+        watch.allModels = weakSelf.allModels;
         
-        [self.parentVC presentViewController:watch animated:YES completion:nil];
+        [weakSelf.parentVC presentViewController:watch animated:YES completion:nil];
     }];
 }
 
