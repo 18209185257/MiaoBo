@@ -85,10 +85,11 @@ static NSString *headerReuseIdentifier = @"headerCell";
         
         
         [self.allModels removeAllObjects];
+        [self.headerModels removeAllObjects];
         
         // 获取顶部的广告
         [self loadHeaderData];
-        [self loadNewData];
+        
         
     }];
     
@@ -104,8 +105,8 @@ static NSString *headerReuseIdentifier = @"headerCell";
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         
         self.currentPage++;
-        
-        [self loadHeaderData];
+        [self.headerModels removeAllObjects];
+        [self headerModels];
         [self loadNewData];
         
     }];
@@ -118,14 +119,16 @@ static NSString *headerReuseIdentifier = @"headerCell";
 
 - (void)loadHeaderData
 {
-    
     [XLLiveTool GetWithSuccess:^(XLHotHeaderResult *result) {
+        
         
         [self.headerModels addObjectsFromArray:result.data];
     
         [self.allModels insertObject:self.headerModels atIndex:0];
         
-        [self.tableView reloadData];
+        [self loadNewData];
+        
+     
     } failure:^(NSError *error) {
         
         [MBProgressHUD showAlertMessage:@"网络异常"];
@@ -178,20 +181,7 @@ static NSString *headerReuseIdentifier = @"headerCell";
     if (indexPath.row == 0) {
         
         XLHotHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:headerReuseIdentifier];
-        
-        if(!cell){
-            
-            cell = [[XLHotHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:headerReuseIdentifier];
-        }
-        
-        if (!self.headerModels){
-            
-            cell.userInteractionEnabled = NO;
-            
-        }else{
-            
-            cell.userInteractionEnabled = YES;
-            
+ 
             cell.headerModels = self.allModels[indexPath.item];
             
             [cell setImageClickBlock:^(XLHotHeaderModel *headerModel) {
@@ -208,7 +198,7 @@ static NSString *headerReuseIdentifier = @"headerCell";
         }
     }];
             
-        }
+        
 
     return cell;
     }
@@ -220,7 +210,16 @@ static NSString *headerReuseIdentifier = @"headerCell";
         
         XLHotModel *hotModel = self.allModels[indexPath.item];
         
+        if (hotModel.smallpic){
+            
         cell.hotModel = hotModel;
+            
+        }else{
+            
+            //如果先加载出来的是热门主播，再把轮播对象加进去
+            [self.allModels insertObject:self.headerModels atIndex:0];
+            [self.tableView reloadData];
+        }
         cell.allModels = self.hotData.list;
         cell.parentVC = self;
     }
