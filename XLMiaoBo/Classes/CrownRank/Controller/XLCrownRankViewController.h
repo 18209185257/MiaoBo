@@ -10,6 +10,8 @@
 
 @interface XLCrownRankViewController : UIViewController
 
+
+@property (nonatomic, weak) UIWebView *webView;
 @property (nonatomic, copy) NSString *urlStr;
 
 @end
