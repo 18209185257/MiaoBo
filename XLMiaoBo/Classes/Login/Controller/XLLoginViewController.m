@@ -10,12 +10,15 @@
 #import "XLThirdLoginView.h"
 #import "XLTabBarViewController.h"
 #import "UMSocial.h"
-//#import "UMSocialShakeService.h"
-//#import "UMSocialScreenShoter.h"
+#import "XLCrownRankViewController.h"
+#import "XLNavigationController.h"
+
+
+#define XLREQUEST @"https://api.weibo.com/oauth2/authorize?client_id=2039393085&redirect_uri=http://www.code4app.com/space-uid-843201.html"
 
 
 
-@interface XLLoginViewController ()
+@interface XLLoginViewController ()<UIWebViewDelegate>
 
 @property (nonatomic, strong) IJKFFMoviePlayerController *player;
 /** 封面图片 */
@@ -24,6 +27,10 @@
 @property (nonatomic, weak) XLThirdLoginView *thirdView;
 /** 快速登录 */
 @property (nonatomic, weak) UIButton *loginBtn;
+
+/** 新浪授权页面 */
+@property (nonatomic, strong) XLCrownRankViewController *sina;
+@property (nonatomic, strong) XLNavigationController *nav;
 
 @end
 
@@ -77,7 +84,7 @@
             switch (type) {
                 case sina:
                     
-                    [weakSelf sina];
+                    [weakSelf sinaMethod];
                     break;
                 
                 case qq:
@@ -210,28 +217,28 @@
 
 
 /** 新浪 */
-- (void)sina
+- (void)sinaMethod
 {
-     __weak typeof(self) weakSelf = self;
-    UMSocialSnsPlatform *snsPlatform = [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina];
+   
+    XLCrownRankViewController *sina = [[XLCrownRankViewController alloc] init];
+    self.sina = sina;
+
     
-    snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response){
+    sina.urlStr = XLREQUEST;
+    sina.title = @"新浪授权登录";
+    
+    XLNavigationController *nav = [[XLNavigationController alloc] initWithRootViewController:sina];
+    self.nav = nav;
+    
+    
+    [self presentViewController:nav animated:YES completion:^{
         
-        //   获取用户名、uid、token
-        if (response.responseCode == UMSResponseCodeSuccess) {
-            UMSocialAccountEntity *snsAccount = [[UMSocialAccountManager socialAccountDictionary] valueForKey:UMShareToSina];
-            NSLog(@"username is %@, uid is %@, token is %@ url is %@",snsAccount.userName,snsAccount.usid,snsAccount.accessToken,snsAccount.iconURL);
-            //获取accestoken以及QQ用户信息，得到的数据在回调Block对象形参respone的data属性
-            [[UMSocialDataService defaultDataService] requestSnsInformation:UMShareToSina  completion:^(UMSocialResponseEntity *response){
-
-                
-                [MBProgressHUD showSuccess:@"登陆成功"];
-               
-                [weakSelf jump];
-            }];
-        }});
-
+        sina.webView.delegate = self;
+        
+    }];
+    
 }
+
 
 /** 微信 */
 - (void)weixin
@@ -280,19 +287,84 @@
 
 }
 
+
+#pragma mark 拦截webView扥所有请求
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+    
+    //1. 获得全路径
+    NSString *urlStr=request.URL.absoluteString;
+    
+    NSLog(@"%@",urlStr);
+    //2. 获得范围
+    NSRange range=[urlStr rangeOfString:@"code="];
+    //3. 跳到回调地址，授权成功,截取请求标记
+    if (range.length>0) {
+        NSString *requestToken=[urlStr substringFromIndex:range.location+range.length];
+        //4.获得访问标记
+        
+        
+        [self getAccessToken:requestToken];
+        
+        return NO;
+    }
+    
+    return  YES;
+}
+#pragma mark 获得AccessToken
+-(void)getAccessToken:(NSString *)requestToken{
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSString *urlStr= @"https://api.weibo.com/oauth2/access_token?";
+    NSURL *url=[NSURL URLWithString:urlStr];
+    NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:url];
+    
+    request.HTTPMethod = @"POST";
+    
+    NSString *Str = [NSString stringWithFormat:@"client_id=2039393085&client_secret=7da7d4501f3f51a14040e1fa5eca7723&grant_type=authorization_code&redirect_uri=http://www.code4app.com/space-uid-843201.html&code=%@",requestToken];
+    
+    NSLog(@"%@",[urlStr stringByAppendingString:Str]);
+    
+    request.HTTPBody = [Str dataUsingEncoding:NSUTF8StringEncoding];
+
+    
+    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+      
+        [MBProgressHUD hideHUD];
+        
+        if (error) {
+        
+            [MBProgressHUD showAlertMessage:@"授权失败"];
+            return;
+        }else{
+            
+            [self.sina dismissViewControllerAnimated:YES completion:nil];
+        }
+        
+        
+        [self jump];
+        
+    }];
+    
+    [task resume];
+    
+    
+    
+}
+
 /** 登陆成功之后跳转 */
 - (void)jump
 {
     XLTabBarViewController *tab = [[XLTabBarViewController alloc] init];
     
-     __weak typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     //一秒之后跳转
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [MBProgressHUD hideHUD];
         [MBProgressHUD showSuccess:@"登陆成功"];
         
-        [self presentViewController:tab animated:NO completion:^{
+        [self presentViewController:tab animated:YES completion:^{
             
             [weakSelf.player stop];
             
@@ -301,7 +373,7 @@
             [[NSNotificationCenter defaultCenter] removeObserver:self];
             
             [weakSelf.player.view removeFromSuperview];
-                self.player = nil;
+            self.player = nil;
             
             [weakSelf.thirdView removeFromSuperview];
             weakSelf.thirdView = nil;
@@ -309,5 +381,6 @@
     });
     
 }
+
 
 @end
