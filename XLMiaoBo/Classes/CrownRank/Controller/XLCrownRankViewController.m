@@ -11,7 +11,6 @@
 
 @interface XLCrownRankViewController ()
 
-@property (nonatomic, weak) UIWebView *webView;
 
 @end
 
