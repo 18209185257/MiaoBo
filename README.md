@@ -29,7 +29,6 @@ ps:求一份上海工作(不是iOS也可以)，够吃住就行，谢谢  TEL:186
 ![image text](https://github.com/XLAccount/MiaoBo/blob/master/程序展示3.gif)
 
 
-
 展示图片
 
 感谢大神Monkey_ALin http://www.jianshu.com/users/9723687edfb5/latest_articles 的demo支持
