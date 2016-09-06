@@ -120,7 +120,8 @@ static NSString *headerReuseIdentifier = @"headerCell";
 - (void)loadHeaderData
 {
     [XLLiveTool GetWithSuccess:^(XLHotHeaderResult *result) {
-        
+        [self.tableView.mj_header endRefreshing];
+        [self.tableView.mj_footer endRefreshing];
         
         [self.headerModels addObjectsFromArray:result.data];
     
@@ -130,6 +131,9 @@ static NSString *headerReuseIdentifier = @"headerCell";
         
      
     } failure:^(NSError *error) {
+        
+        [self.tableView.mj_header endRefreshing];
+        [self.tableView.mj_footer endRefreshing];
         
         [MBProgressHUD showAlertMessage:@"网络异常"];
     }];
