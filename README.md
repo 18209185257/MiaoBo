@@ -9,7 +9,7 @@ ps:求一份上海工作(不是iOS也可以)，够吃住就行，谢谢  TEL:186
 下载地址：https://pan.baidu.com/s/1boPOomN 密码:：9yd8
 
 快速集成RTMP的视频推流教程：http://www.code4app.com/blog-843201-315.html
-
+![living](程序展示1.gif)
 喜欢请 Star & Fork
 
 ![image text](https://github.com/XLAccount/MiaoBo/blob/master/程序展示1.gif)
