@@ -16,6 +16,8 @@ ffmpeg常用命令操作：http://www.code4app.com/blog-843201-326.html
 
 ![image text](https://github.com/XLAccount/MiaoBo/blob/master/程序展示1.gif)
 
+![image](https://thumbnail0.baidupcs.com/thumbnail/4634700136461f523c1ad7334c75462b?fid=1530795080-250528-817673309142451&time=1473559200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-TO36brqJwUk%2B4IxQ6Ck2EDMI3hc%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=5900897452554364973&dp-callid=0&size=c710_u400&quality=100)
+
 
 展示图片
 
